@@ -1,27 +1,13 @@
 # Plus Image
 
-**Generador web de imágenes +18 con IA** (usando fal.ai)
+**Generador web de imágenes +18 con IA** (100% GRATIS)
 
-## Deploy en Vercel (recomendado)
+Ahora usa **Pollinations.ai** — completamente gratis, sin clave ni saldo.
 
-1. Ve a [vercel.com/dashboard](https://vercel.com/dashboard)
-2. Importa el repositorio `plus-image`
-3. Agrega Environment Variable:
-   - `FAL_KEY` = tu clave de fal.ai
-4. Deploy
+## Deploy en Vercel
 
-## Configuración local
+1. Importa el repo `plus-image` en Vercel
+2. Deploy
+3. ¡Listo para usar!
 
-```bash
-git clone https://github.com/roxyrosefy/plus-image.git
-cd plus-image
-npm install
-npm run dev
-```
-
-Agrega tu clave en `.env.local`:
-```
-FAL_KEY=tu_clave_aqui
-```
-
-¡Listo! 🔥
+La app genera imágenes +18 de forma gratuita (puede tener límites de uso).
