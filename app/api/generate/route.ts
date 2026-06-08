@@ -8,36 +8,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Prompt is required' }, { status: 400 });
     }
 
-    const falKey = process.env.FAL_KEY;
-    if (!falKey) {
-      return NextResponse.json({ error: 'FAL_KEY not configured' }, { status: 500 });
-    }
-
-    const response = await fetch('https://fal.run/fal-ai/flux/dev', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Key ${falKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        prompt: prompt + ", highly detailed, realistic, 8k",
-        image_size: "landscape_16_9",
-        num_inference_steps: 28,
-        guidance_scale: 3.5,
-      }),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      return NextResponse.json({ error: `fal.ai error: ${response.status} ${errorText}` }, { status: response.status });
-    }
-
-    const data = await response.json();
-    const imageUrl = data.images?.[0]?.url || data.image?.url;
-
-    if (!imageUrl) {
-      return NextResponse.json({ error: 'No image URL returned' }, { status: 500 });
-    }
+    // Free Pollinations.ai - no key, no payment needed (supports NSFW)
+    const encodedPrompt = encodeURIComponent(
+      prompt + ", highly detailed, realistic, 8k quality"
+    );
+    
+    const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?model=flux&width=1024&height=1024&safe=false&enhance=true`;
 
     return NextResponse.json({ imageUrl });
   } catch (error: any) {
