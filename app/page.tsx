@@ -17,6 +17,7 @@ export default function PlusImage() {
 
     setLoading(true);
     setError('');
+    setImageUrl('');
 
     try {
       const res = await fetch('/api/generate', {
@@ -69,32 +70,73 @@ export default function PlusImage() {
             disabled={loading || !prompt.trim()}
             className="mt-6 w-full py-5 text-xl font-semibold rounded-3xl bg-gradient-to-r from-pink-600 via-purple-600 to-violet-600 hover:brightness-110 transition-all disabled:opacity-60"
           >
-            {loading ? 'Generando... (15-40 segundos)' : '🚀 Generar Imagen +18'}
+            {loading ? 'Generando... (10-30 segundos)' : '🚀 Generar Imagen +18'}
           </button>
         </div>
 
         {error && <div className="max-w-3xl mx-auto mb-8 p-4 bg-red-950/50 border border-red-500/50 rounded-2xl text-red-400">{error}</div>}
 
-        {imageUrl && (
+        {(imageUrl || loading) && (
           <div className="max-w-4xl mx-auto mb-16">
             <h2 className="text-3xl font-semibold mb-6 text-center">Resultado</h2>
-            <img src={imageUrl} alt="Generada" className="w-full rounded-3xl border border-zinc-800" />
-            <div className="text-center mt-6">
-              <a href={imageUrl} download className="px-10 py-4 bg-white text-black rounded-full font-semibold">⬇️ Descargar</a>
+            
+            <div className="relative rounded-3xl overflow-hidden border border-zinc-800 shadow-2xl bg-zinc-900 min-h-[400px] flex items-center justify-center">
+              {loading && !imageUrl ? (
+                <div className="text-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500 mx-auto mb-4"></div>
+                  <p className="text-zinc-400">Generando imagen... (puede tardar 10-30 segundos)</p>
+                </div>
+              ) : imageUrl ? (
+                <img 
+                  src={imageUrl} 
+                  alt="Imagen generada" 
+                  className="w-full max-h-[620px] object-contain"
+                  onError={() => setError('Error al cargar la imagen. Intenta de nuevo.')}
+                />
+              ) : null}
             </div>
+
+            {imageUrl && (
+              <div className="flex justify-center mt-6">
+                <a
+                  href={imageUrl}
+                  download={`plus-image-${Date.now()}.jpg`}
+                  className="px-10 py-4 bg-white text-black rounded-full font-semibold hover:bg-zinc-200 transition-colors flex items-center gap-2"
+                >
+                  ⬇️ Descargar Imagen
+                </a>
+              </div>
+            )}
           </div>
         )}
 
         {history.length > 0 && (
-          <div>
-            <h2 className="text-3xl font-semibold mb-6 text-center">Recientes</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {history.map((url, i) => (
-                <img key={i} src={url} onClick={() => setImageUrl(url)} className="rounded-2xl cursor-pointer" />
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-3xl font-semibold mb-8 text-center">Imágenes Recientes</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {history.map((url, index) => (
+                <div 
+                  key={index}
+                  onClick={() => setImageUrl(url)}
+                  className="group relative aspect-[4/3] rounded-3xl overflow-hidden border border-zinc-800 cursor-pointer hover:border-pink-500 transition-all"
+                >
+                  <img 
+                    src={url} 
+                    alt={`Historial ${index}`} 
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-all flex items-end p-4">
+                    <span className="text-sm text-white/80">Ver grande</span>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
         )}
+
+        <div className="text-center text-zinc-500 text-sm mt-20">
+          Plus Image • 100% Gratis con Pollinations.ai • Contenido +18
+        </div>
       </div>
     </div>
   );
